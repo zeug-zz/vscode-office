@@ -1,0 +1,382 @@
+:root {
+    --hr-bg: rgba(128, 128, 128, 0.35);
+    --ext-border-color: rgba(128, 128, 128, 0.22);
+    --bg-color: #ffffff;
+    --front-color: #1f1f1f;
+    --second-bg-color: #f5f5f7;
+    --code-bg-color: #f0f1f3;
+    --list-hover-color: #0451a5;
+    --dropdown-hover-background: #dbe8cf;
+    --error-color: #e51400;
+
+    --page-width: 210mm;
+    --page-height: 297mm;
+    --page-padding-y: 25.4mm;
+    --page-padding-x: 25.4mm;
+    --page-gutter: 1.25rem;
+    --outline-pane-width: 240px;
+    --outline-pane-buffer: 0px;
+    --editor-chrome-width: 22px;
+    --page-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+    --font-body: "Aptos", "Calibri", "Cambria", "Georgia", "Times New Roman", serif;
+    --font-head:
+        "SF Pro Display",
+        "SF Pro Text",
+        "Helvetica Neue",
+        "Helvetica",
+        "Arial",
+        sans-serif;
+    --font-mono:
+        "SF Mono",
+        "Menlo",
+        "Monaco",
+        "Courier New",
+        monospace;
+}
+
+/* ============================================================
+   LAYOUT CONTRACT — single scroll container
+   Only the active mode element (.vditor-wysiwyg/-ir/-sv/-preview)
+   scrolls. Chrome above it is locked to the viewport so the
+   toolbar stays fixed and no outer scrollbar appears.
+   ============================================================ */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#vditor,
+.vditor {
+    width: min(100%, calc(var(--page-width) + (var(--page-gutter) * 2) + var(--editor-chrome-width)));
+    max-width: calc(var(--page-width) + (var(--page-gutter) * 2) + var(--editor-chrome-width));
+    height: 100vh !important;
+    margin: 0 auto;
+    border: 0;
+    overflow: hidden;
+}
+
+#vditor:has(.vditor-outline[style*="display: block"]),
+.vditor:has(.vditor-outline[style*="display: block"]) {
+    width: min(100%, calc(var(--page-width) + (var(--page-gutter) * 2) + var(--editor-chrome-width) + var(--outline-pane-width) + var(--outline-pane-buffer)));
+    max-width: calc(var(--page-width) + (var(--page-gutter) * 2) + var(--editor-chrome-width) + var(--outline-pane-width) + var(--outline-pane-buffer)));
+}
+
+.vditor-content {
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.vditor-preview,
+.vditor-wysiwyg,
+.vditor-ir,
+.vditor-sv {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.vditor-wysiwyg {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* ============================================================
+   PAGE SHEET — cosmetic A4 page
+   ============================================================ */
+.vditor-preview > .vditor-reset,
+.vditor-wysiwyg pre.vditor-reset,
+.vditor-ir,
+.vditor-sv {
+    width: var(--page-width);
+    min-width: var(--page-width);
+    max-width: var(--page-width);
+    flex-shrink: 0;
+    min-height: var(--page-height);
+    height: auto;
+    margin: 1.25rem auto 1.5rem;
+    padding: var(--page-padding-y) var(--page-padding-x);
+    box-sizing: border-box;
+
+    border: 1px solid;
+    border-radius: 2px;
+    box-shadow: var(--page-shadow);
+
+    font-size: 12pt;
+    line-height: 1.5;
+    letter-spacing: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+.vditor-wysiwyg pre.vditor-reset {
+    min-height: 0;
+    margin: 1.25rem auto 0;
+    height: calc(100% - 1.25rem);
+    max-height: var(--page-height);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Body text: override Vditor's global sans rule */
+.vditor-preview > .vditor-reset,
+.vditor-wysiwyg pre.vditor-reset,
+.vditor-reset p,
+.vditor-reset li,
+.vditor-reset blockquote,
+.vditor-reset td,
+.vditor-reset dd,
+.vditor-reset dt,
+.vditor-ir,
+.vditor-ir p,
+.vditor-ir li,
+.vditor-ir blockquote,
+.vditor-ir td,
+.vditor-ir dd,
+.vditor-ir dt,
+.vditor-sv,
+.vditor-sv p,
+.vditor-sv li,
+.vditor-sv blockquote,
+.vditor-sv td,
+.vditor-sv dd,
+.vditor-sv dt {
+    font-family: var(--font-body) !important;
+}
+
+/* Inline formatting: catch strong/em/del/s/u/spans inserted by toolbar */
+.vditor-reset strong,
+.vditor-reset b,
+.vditor-reset em,
+.vditor-reset i,
+.vditor-reset s,
+.vditor-reset del,
+.vditor-reset u,
+.vditor-reset span:not([data-type]),
+.vditor-ir strong,
+.vditor-ir b,
+.vditor-ir em,
+.vditor-ir i,
+.vditor-ir s,
+.vditor-ir del,
+.vditor-ir u,
+.vditor-ir span:not([data-type]),
+.vditor-sv strong,
+.vditor-sv b,
+.vditor-sv em,
+.vditor-sv i,
+.vditor-sv s,
+.vditor-sv del,
+.vditor-sv u,
+.vditor-sv span:not([data-type]) {
+    font-family: var(--font-body) !important;
+}
+
+.vditor-reset a,
+.vditor-ir a,
+.vditor-sv a {
+    font-family: var(--font-body) !important;
+}
+
+.vditor-reset p,
+.vditor-ir p,
+.vditor-sv p {
+    margin: 0 0 1em;
+}
+
+/* Headings stay Mac-style sans */
+.vditor-reset h1,
+.vditor-reset h2,
+.vditor-reset h3,
+.vditor-reset h4,
+.vditor-reset h5,
+.vditor-reset h6,
+.vditor-ir h1,
+.vditor-ir h2,
+.vditor-ir h3,
+.vditor-ir h4,
+.vditor-ir h5,
+.vditor-ir h6,
+.vditor-sv h1,
+.vditor-sv h2,
+.vditor-sv h3,
+.vditor-sv h4,
+.vditor-sv h5,
+.vditor-sv h6 {
+    font-family: var(--font-head) !important;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #111111;
+    margin-top: 1.6em;
+    margin-bottom: 0.6em;
+    line-height: 1.25;
+}
+
+.vditor-reset h1,
+.vditor-ir h1,
+.vditor-sv h1 {
+    font-size: 2em;
+}
+
+.vditor-reset h2,
+.vditor-ir h2,
+.vditor-sv h2 {
+    font-size: 1.45em;
+}
+
+.vditor-reset h3,
+.vditor-ir h3,
+.vditor-sv h3 {
+    font-size: 1.18em;
+}
+
+.vditor-reset h4,
+.vditor-ir h4,
+.vditor-sv h4 {
+    font-size: 1em;
+}
+
+/* Indented blockquotes, no rule */
+.vditor-reset blockquote,
+.vditor-ir blockquote,
+.vditor-sv blockquote {
+    margin: 1.2em 0 1.2em 1.5em;
+    padding: 0;
+    border-left: none;
+    color: #4c5561;
+    font-style: normal;
+}
+
+.vditor-reset hr,
+.vditor-ir hr,
+.vditor-sv hr {
+    border: none;
+    height: 1px;
+    margin: 2em 0;
+}
+
+/* Mono stays mono */
+.vditor-reset code,
+.vditor-reset pre,
+.vditor-reset kbd,
+.vditor-reset samp,
+.vditor-ir code,
+.vditor-ir pre,
+.vditor-ir kbd,
+.vditor-ir samp,
+.vditor-sv code,
+.vditor-sv pre,
+.vditor-sv kbd,
+.vditor-sv samp {
+    font-family: var(--font-mono) !important;
+}
+
+.vditor-reset code,
+.vditor-ir code,
+.vditor-sv code {
+    border-radius: 6px;
+    padding: 0.15em 0.38em;
+    font-size: 0.92em;
+}
+
+.vditor-reset pre,
+.vditor-ir pre,
+.vditor-sv pre {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 1em 1.1em;
+    overflow-x: auto;
+}
+
+.vditor-ir pre.vditor-reset {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+/* Strip boxed styling from display math / KaTeX wrappers */
+.vditor-reset .katex-display,
+.vditor-reset .language-math,
+.vditor-reset .vditor-math,
+.vditor-reset pre[class*="math"],
+.vditor-reset div[class*="math"],
+.vditor-reset pre:has(.katex-display),
+.vditor-ir .katex-display,
+.vditor-ir .language-math,
+.vditor-ir .vditor-math,
+.vditor-ir pre[class*="math"],
+.vditor-ir div[class*="math"],
+.vditor-sv .katex-display,
+.vditor-sv .language-math,
+.vditor-sv .vditor-math,
+.vditor-sv pre[class*="math"],
+.vditor-sv div[class*="math"] {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Tables */
+.vditor-reset table,
+.vditor-ir table,
+.vditor-sv table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.4em 0;
+}
+
+.vditor-reset th,
+.vditor-reset td,
+.vditor-ir th,
+.vditor-ir td,
+.vditor-sv th,
+.vditor-sv td {
+    border: 1px solid;
+    padding: 0.55em 0.7em;
+}
+
+.vditor-reset th,
+.vditor-ir th,
+.vditor-sv th {
+    font-family: var(--font-head) !important;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    #vditor,
+    .vditor {
+        width: 100%;
+        max-width: none;
+    }
+
+    .vditor-preview > .vditor-reset,
+    .vditor-wysiwyg pre.vditor-reset,
+    .vditor-ir,
+    .vditor-sv {
+        width: calc(100% - 1rem);
+        min-width: 0;
+        max-width: none;
+        min-height: auto;
+        margin: 0.5rem auto 1rem;
+        padding: 1.25rem 1rem;
+        border-radius: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+    }
+
+    .vditor-wysiwyg pre.vditor-reset {
+        min-height: 0;
+        height: calc(100% - 1.5rem);
+        max-height: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}

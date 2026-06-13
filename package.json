@@ -407,6 +407,7 @@
 					"enum": [
 						"Auto",
 						"Light",
+						"Word",
 						"Solarized",
 						"Warm Light",
 						"Dim Light",
